@@ -10,7 +10,7 @@ es_meta([F,C],[X,Y]):-ubicacionCarga([F,C]),sitioDetonacion([X,Y]).
 
 
 %buscar_plan(+Einicial,-Plan,-Destino,-Costo).
-buscar_plan(EstadoInicial,Plan,Destino,Costo):- retractall(frontera(_)),
+buscar_plan(EstadoInicial,Plan,_Destino,_Costo):- retractall(frontera(_)),
                                                 retractall(visitados(_)),
                                                 EstadoInicial=[[X,Y],_Dir,_ListaPoseciones,_FlagCCP],
                                                 estaEn([c,c1],[Cx,Cy]),
@@ -19,8 +19,7 @@ buscar_plan(EstadoInicial,Plan,Destino,Costo):- retractall(frontera(_)),
                                                 Nodo=nodo(EstadoInicial,[],0,Fx),
                                                 assertz(frontera(Nodo)),
                                                 buscarA*(Solucion),
-                                                reverse(Solucion, SolucionAux),
-                                                writeln(""),write("El camino es "),writeln(SolucionAux).
+                                                reverse(Solucion, Plan).
 
 /*Heuristica se encarga de calcular el valor de la heuristica
 de un estado a la meta.*/
