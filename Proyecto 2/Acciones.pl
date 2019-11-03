@@ -178,7 +178,7 @@ estado_sucesor(Estado,EstadoV,detonar(Detonador),1):-Estado=[[F,C],Dir,ListaPose
                                             Det=[d,NombreD,ActivadoD],
                                             elim(Det,ListaPoseciones,Lista),
                                             Detonador=[d,NombreD,si],
-                                            EstadoV=[[F,C],Dir,[ListaPoseciones],no].
+                                            EstadoV=[[F,C],Dir,[Detonador|ListaPoseciones],no].
 
 buscarC([],[]).
 buscarC([H|T],H):-H=[c,_],!.
