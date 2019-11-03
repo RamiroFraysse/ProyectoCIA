@@ -235,12 +235,12 @@ sec_recorrido2_caso3(Pos,HRecorrido2):-%pos_sitioDejarCarga
 
 
 
-menor(N1,N2,N3,N1):-(N1=<N2),(N1=<N3).
-menor(N1,N2,N3,N2):-(N2=<N1),(N2=<N3).
-menor(N1,N2,N3,N3):-(N3=<N1),(N3=<N2).
+menor(N1,N2,N3,N1):-(N1=<N2),(N1=<N3),!.
+menor(N1,N2,N3,N2):-(N2=<N1),(N2=<N3),!.
+menor(N1,N2,N3,N3):-(N3=<N1),(N3=<N2),!.
 
-menor(N1,N2,N1):-(N1=<N2).
-menor(N1,N2,N2):-(N2=<N1).
+menor(N1,N2,N1):-(N1=<N2),!.
+menor(N1,N2,N2):-(N2=<N1),!.
 
 
 distancia([F1,C1],[F2,C2],R):-(dif_abs(F1,F2,Rf),dif_abs(C1,C2,Rc),R is Rf+Rc). 
