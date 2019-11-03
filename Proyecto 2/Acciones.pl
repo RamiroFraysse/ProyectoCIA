@@ -27,6 +27,18 @@ estado_sucesor(Estado,EstadoV,caminar,Costo):-Estado=[[F,C],norte,ListaPosecione
                                           suelo(S,Costo),
                                           not(estaEn([p,_,_],[I,C])),
                                           not(estaEn([v,_,_],[I,C])),
+                                          estaEn([r,R],[I,C]),
+                                          abreReja(L,[r,R]),
+                                          member(L,ListaPoseciones),
+                                          %writeln("caminar norte "),
+                                          EstadoV=[[I,C],norte,ListaPoseciones,FlagCCP].
+estado_sucesor(Estado,EstadoV,caminar,Costo):-Estado=[[F,C],norte,ListaPoseciones,FlagCCP],
+                                          I is F-1,
+                                          celda([I,C],S),
+                                          suelo(S,Costo),
+                                          not(estaEn([p,_,_],[I,C])),
+                                          not(estaEn([v,_,_],[I,C])),
+                                          not(estaEn([r,_R],[I,C])),
                                           %writeln("caminar norte "),
                                           EstadoV=[[I,C],norte,ListaPoseciones,FlagCCP].
 
@@ -37,19 +49,39 @@ estado_sucesor(Estado,EstadoV,caminar,Costo):-Estado=[[F,C],sur,ListaPoseciones,
                                           suelo(S,Costo),
                                           not(estaEn([p,_,_],[I,C])),
                                           not(estaEn([v,_,_],[I,C])),
+                                          estaEn([r,R],[I,C]),
+                                          abreReja(L,[r,R]),
+                                          member(L,ListaPoseciones),
+                                          %writeln("caminar sur "),
+                                          EstadoV=[[I,C],sur,ListaPoseciones,FlagCCP].
+estado_sucesor(Estado,EstadoV,caminar,Costo):-Estado=[[F,C],sur,ListaPoseciones,FlagCCP],
+                                          I is F+1,
+                                          celda([I,C],S),
+                                          suelo(S,Costo),
+                                          not(estaEn([p,_,_],[I,C])),
+                                          not(estaEn([v,_,_],[I,C])),
+                                          not(estaEn([r,_R],[I,C])),
                                           %writeln("caminar sur "),
                                           EstadoV=[[I,C],sur,ListaPoseciones,FlagCCP].
 %este
 estado_sucesor(Estado,EstadoV,caminar,Costo):-Estado=[[F,C],este,ListaPoseciones,FlagCCP],
                                           J is C+1,
-                                          
                                           celda([F,J],S),
                                           suelo(S,Costo),
                                           not(estaEn([p,_,_],[F,J])),
-
                                           not(estaEn([v,_,_],[F,J])),
-                                                                                                                              
-
+                                          estaEn([r,R],[F,J]),
+                                          abreReja(L,[r,R]),
+                                          member(L,ListaPoseciones),                                                                                    
+                                          %writeln("caminar este "),
+                                          EstadoV=[[F,J],este,ListaPoseciones,FlagCCP].
+estado_sucesor(Estado,EstadoV,caminar,Costo):-Estado=[[F,C],este,ListaPoseciones,FlagCCP],
+                                          J is C+1,
+                                          celda([F,J],S),
+                                          suelo(S,Costo),
+                                          not(estaEn([p,_,_],[F,J])),
+                                          not(estaEn([v,_,_],[F,J])),   
+                                          not(estaEn([r,_R],[F,J])),                                                                               
                                           %writeln("caminar este "),
                                           EstadoV=[[F,J],este,ListaPoseciones,FlagCCP].
 %oeste
@@ -59,6 +91,18 @@ estado_sucesor(Estado,EstadoV,caminar,Costo):-Estado=[[F,C],oeste,ListaPosecione
                                           suelo(S,Costo),
                                           not(estaEn([p,_,_],[F,J])),
                                           not(estaEn([v,_,_],[F,J])),
+                                          estaEn([r,R],[F,J]),
+                                          abreReja(L,[r,R]),
+                                          member(L,ListaPoseciones),
+                                          %writeln("caminar oeste"),
+                                          EstadoV=[[F,J],oeste,ListaPoseciones,FlagCCP].
+estado_sucesor(Estado,EstadoV,caminar,Costo):-Estado=[[F,C],oeste,ListaPoseciones,FlagCCP],
+                                          J is C-1,
+                                          celda([F,J],S),
+                                          suelo(S,Costo),
+                                          not(estaEn([p,_,_],[F,J])),
+                                          not(estaEn([v,_,_],[F,J])),
+                                          not(estaEn([r,_R],[F,J])),
                                           %writeln("caminar oeste"),
                                           EstadoV=[[F,J],oeste,ListaPoseciones,FlagCCP].
 
@@ -150,44 +194,48 @@ estado_sucesor(Estado,EstadoV,juntar_llave(Llave),1):-Estado=[[F,C],Dir,ListaPos
                                             estaEn([l,NombreL],[F,C]),
                                             Llave=[l,NombreL],
                                             not(member(Llave,ListaPoseciones)),
-                                            EstadoV=[[F,C],Dir,[Llave|ListaPoseciones],FlagCCP].
+                                            sort([Llave|ListaPoseciones],LOrdenada),
+                                            EstadoV=[[F,C],Dir,LOrdenada,FlagCCP].
 %juntar_carga____________________________________________________________________________________________
-estado_sucesor(Estado,EstadoV,juntar_carga(Carga),3):-Estado=[[F,C],Dir,ListaPoseciones,FlagCCP],
+estado_sucesor(Estado,EstadoV,juntar_carga(Carga),3):-Estado=[[F,C],Dir,ListaPoseciones,_FlagCCP],
                                             estaEn([c,NombreC],[F,C]),
                                             Carga=[c,NombreC],
                                             not(member(Carga,ListaPoseciones)),
-                                            EstadoV=[[F,C],Dir,[Carga|ListaPoseciones],si].
+                                            sort([Carga|ListaPoseciones],LOrdenada),
+                                            EstadoV=[[F,C],Dir,LOrdenada,si].
 %juntar_detonador________________________________________________________________________________________
 estado_sucesor(Estado,EstadoV,juntar_detonador(Detonador),2):-Estado=[[F,C],Dir,ListaPoseciones,FlagCCP],
                                             estaEn([d,NombreD,ActivadoD],[F,C]),
                                             Detonador=[d,NombreD,ActivadoD],
                                             not(member(Detonador,ListaPoseciones)),
-                                            EstadoV=[[F,C],Dir,[Detonador|ListaPoseciones],FlagCCP].
+                                            sort([Detonador|ListaPoseciones],LOrdenada),
+                                            EstadoV=[[F,C],Dir,LOrdenada,FlagCCP].
 
 %dejar_carga_____________________________________________________________________________________________
-estado_sucesor(Estado,EstadoV,dejar_carga(Carga),1):-Estado=[[F,C],Dir,ListaPoseciones,FlagCCP],
+estado_sucesor(Estado,EstadoV,dejar_carga(Carga),1):-Estado=[[F,C],Dir,ListaPoseciones,_FlagCCP],
                                             ubicacionCarga([F,C]),
                                             buscarC(ListaPoseciones,Carga),
-                                            Carga=[c,NombreC],
+                                            Carga=[c,_NombreC],
                                             elim(Carga,ListaPoseciones,Lista),
                                             EstadoV=[[F,C],Dir,Lista,no].
 %detonar__________________________________________________________________________________________________
 estado_sucesor(Estado,EstadoV,detonar(Detonador),1):-Estado=[[F,C],Dir,ListaPoseciones,no],
                                             sitioDetonacion([F,C]),
                                             buscarD(ListaPoseciones,Det),
-                                            Det=[d,NombreD,ActivadoD],
+                                            Det=[d,NombreD,_ActivadoD],
                                             elim(Det,ListaPoseciones,Lista),
                                             Detonador=[d,NombreD,si],
-                                            EstadoV=[[F,C],Dir,[Detonador|ListaPoseciones],no].
+                                            sort([Detonador|Lista],LOrdenada),
+                                            EstadoV=[[F,C],Dir,LOrdenada,no].
 
 buscarC([],[]).
-buscarC([H|T],H):-H=[c,_],!.
-buscarC([H|T],R):-buscarC(T,R).
+buscarC([H|_T],H):-H=[c,_],!.
+buscarC([_H|T],R):-buscarC(T,R).
 
 buscarD([],[]).
-buscarD([H|T],H):-H=[d,_,_],!.
-buscarD([H|T],R):-buscarD(T,R).
+buscarD([H|_T],H):-H=[d,_,_],!.
+buscarD([_H|T],R):-buscarD(T,R).
 
-elim(E,[],[]).
+elim(_E,[],[]).
 elim(E,[E|T],R):-!,elim(E,T,R).
 elim(E,[H|T],[H|R]):-elim(E,T,R).
