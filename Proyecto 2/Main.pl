@@ -1,6 +1,6 @@
 :-dynamic frontera/1, visitados/1,distancia_Detonador_SitioDetonacionMasCorto/1,distancia_SitioDejarCarga_SitioDetonacionMasCorto/1.
-:- consult('Acciones.pl').
 :- consult('Mapa.pl').
+:- consult('Acciones.pl').
 :-set_prolog_flag(answer_write_options,[quoted(true),portray(true),spacing(next_argument)]).
 
 
@@ -9,9 +9,7 @@
 es_meta(Nodo):-Nodo=nodo(Estado,_Camino,_CostoCamino,_Fx),
             Estado=[[F,C],_Dir,ListaPoseciones,FlagCCP],
             %Posicion_coincide_con_el_sitio_de_detonacion.
-            sitioDetonacion([F,C]),
             %La_Carga_Dejada_en_su_ubicacion
-            FlagCCP=no,
             %Detonador_esta_activo
             member([d,_Nombre,si],ListaPoseciones),!.
 
@@ -55,6 +53,9 @@ buscar_plan(EstadoInicial,Plan,Destino,Costo):- statistics(runtime,[TiempoInicio
 TiempoTotal is ((TiempoFinal-TiempoInicio)/1000)/60,
 write("Tiempo total transcurrido: "),write(TiempoTotal),write(" minutos.").
 
+%buscar_plan(+Einicial,-Plan,-Destino,-Costo).
+buscar_plan(EstadoInicial,Plan,Destino,Costo):- writeln("No es posible encontrar una solucion para el estado Ingresado en el mapa cargado").
+
 /*Heuristica se encarga de calcular el valor de la heuristica
 de un estado a la meta.*/
 
@@ -67,11 +68,9 @@ buscarA*(Nodo):-
 %Caso_Recursivo.
 buscarA*(Solucion):-                                   
                     seleccionar(Nodo),
-                    write("Nodo seleccionado "),writeln(Nodo),
                     assertz(visitados(Nodo)),
                     retract(frontera(Nodo)),
                     generarVecinos(Nodo, Vecinos),
-                    write("Vecinos "),
                     agregarVecinos(Vecinos),
                     buscarA*(Solucion).
 
@@ -91,7 +90,7 @@ generarVecinos(Nodo,Vecinos):-Nodo=nodo(Estado,Camino,CostoCamino,_F),
 agregarVecinos([]).
 agregarVecinos([NodoVecino|T]):-superaControlDeVisitados(NodoVecino),
                                 superaControlDeFrontera(NodoVecino),
-                                assertz(frontera(NodoVecino)),writeln(NodoVecino),!,
+                                assertz(frontera(NodoVecino)),!,
                                 agregarVecinos(T).
 agregarVecinos([_NodoVecino|T]):-agregarVecinos(T).
                                 

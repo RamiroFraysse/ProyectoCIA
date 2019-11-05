@@ -1,5 +1,4 @@
-:-consult('Mapa.pl').
-f5:-consult('Acciones.pl').
+
 %rotar_determina_el_costo_de_girar_desde_una_direccion_a_otra
 rotar(norte,oeste,1).
 rotar(norte,este,1).
